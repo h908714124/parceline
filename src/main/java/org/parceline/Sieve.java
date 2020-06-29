@@ -32,22 +32,12 @@ class Sieve {
         List<BigInteger> result = new ArrayList<>();
         for (BigInteger prime : primes) {
             BigInteger quotient;
-            while ((quotient = tryDivide(n, prime)) != null) {
+            while ((quotient = Division.tryDivide(n, prime)) != null) {
                 result.add(prime);
                 n = quotient;
             }
         }
         return result;
-    }
-
-    private BigInteger tryDivide(BigInteger n, BigInteger prime) {
-        BigInteger[] qr = n.divideAndRemainder(prime);
-        BigInteger quotient = qr[0];
-        BigInteger remainder = qr[1];
-        if (remainder.equals(BigInteger.ZERO)) {
-            return quotient;
-        }
-        return null;
     }
 
     private static BigInteger[] toInts(boolean[] prime) {

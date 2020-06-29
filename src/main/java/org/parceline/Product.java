@@ -34,10 +34,8 @@ public class Product {
         }
         for (int i = 0; i < factors.length; i++) {
             BigInteger factor = factors[i];
-            BigInteger[] qr = factor.divideAndRemainder(dividend);
-            BigInteger quotient = qr[0];
-            BigInteger remainder = qr[1];
-            if (remainder.equals(BigInteger.ZERO)) {
+            BigInteger quotient = Division.tryDivide(factor, dividend);
+            if (quotient != null) {
                 if (quotient.equals(BigInteger.ONE)) {
                     BigInteger[] result = Arrays.copyOf(factors, factors.length - 1);
                     System.arraycopy(factors, i + 1, result, i, factors.length - i - 1);
