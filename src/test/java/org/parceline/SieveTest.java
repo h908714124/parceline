@@ -26,8 +26,8 @@ class SieveTest {
 
     @Test
     void testFactor() {
-        Sieve sieve = Sieve.create(97); // primes not greater than 97
-        List<BigInteger> result = sieve.factor(BigInteger.valueOf(13).multiply(BigInteger.valueOf(17).multiply(BigInteger.valueOf(252))));
+        Sieve sieve = Sieve.create(55692); // primes not greater than 55692
+        List<BigInteger> result = sieve.findPrimeFactors(BigInteger.valueOf(13).multiply(BigInteger.valueOf(17).multiply(BigInteger.valueOf(252))));
         for (BigInteger p : result) {
             assertTrue(p.isProbablePrime(100));
         }

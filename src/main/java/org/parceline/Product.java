@@ -6,10 +6,14 @@ import java.util.List;
 
 public class Product {
 
+    private final BigInteger maxFactor;
+    private final Sieve sieve;
     private final BigInteger[] factors;
 
     public Product(BigInteger[] factors) {
         this.factors = factors;
+        this.maxFactor = Util.findMax(factors);
+        this.sieve = Sieve.create(maxFactor.intValueExact() + 1);
     }
 
     public static Product create(List<BigInteger> factors) {
@@ -25,7 +29,7 @@ public class Product {
         return new Product(result);
     }
 
-    public Product divide(BigInteger dividend) {
+    private Product divide(BigInteger dividend) {
         if (dividend.equals(BigInteger.ZERO)) {
             throw new IllegalArgumentException("division by zero");
         }
@@ -47,7 +51,7 @@ public class Product {
                 }
             }
         }
-        throw new IllegalArgumentException(dividend + " does not divide " + this);
+        return null;
     }
 
     public Product divide(long... dividend) {
@@ -57,7 +61,21 @@ public class Product {
     public Product divide(Product dividend) {
         Product d = this;
         for (BigInteger factor : dividend.factors) {
-            d = d.divide(factor);
+            Product q = d.divide(factor);
+            if (q == null) {
+                // assuming that the dividend doesn't have "large" prime factors,
+                // so the sieve can be used
+                List<BigInteger> primes = sieve.findPrimeFactors(factor);
+                for (BigInteger prime : primes) {
+                    Product q2 = d.divide(prime);
+                    if (q2 == null) {
+                        throw new IllegalArgumentException(prime + " does not divide " + this);
+                    }
+                    d = q2;
+                }
+            } else {
+                d = q;
+            }
         }
         return d;
     }

@@ -8,9 +8,11 @@ import java.util.List;
 
 class Sieve {
 
+    private final BigInteger max;
     private final BigInteger[] primes;
 
-    Sieve(BigInteger[] primes) {
+    private Sieve(int max, BigInteger[] primes) {
+        this.max = BigInteger.valueOf(max);
         this.primes = primes;
     }
 
@@ -25,10 +27,13 @@ class Sieve {
                 }
             }
         }
-        return new Sieve(toInts(prime));
+        return new Sieve(max, toInts(prime));
     }
 
-    List<BigInteger> factor(BigInteger n) {
+    List<BigInteger> findPrimeFactors(BigInteger n) {
+        if (max.subtract(n).signum() == -1) {
+            throw new IllegalArgumentException(n + " is too large, max is " + max);
+        }
         List<BigInteger> result = new ArrayList<>();
         for (BigInteger prime : primes) {
             BigInteger quotient;
