@@ -6,9 +6,12 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @TestInstance(Lifecycle.PER_CLASS)
 class ProductsTest {
+
+    private final Sieve sieve = Sieve.create(1000);
 
     @Test
     void centralBin4() {
@@ -52,5 +55,25 @@ class ProductsTest {
         Product p = Products.centralBin(468);
         BigInteger[] qr = p.compute().divideAndRemainder(BigInteger.valueOf(929));
         Assertions.assertEquals(BigInteger.ZERO, qr[1]);
+    }
+
+    @Test
+    void centralBinLoop() {
+        for (int i = 1; i < 100; i++) {
+            Product p = Products.centralBin(i);
+            BigInteger f = findLargestPrimeFactor(p);
+            Assertions.assertEquals(-1, BigInteger.valueOf(i).subtract(f).signum());
+        }
+    }
+
+    private BigInteger findLargestPrimeFactor(Product p) {
+        BigInteger result = BigInteger.ZERO;
+        for (BigInteger factor : p.factors()) {
+            List<BigInteger> primes = sieve.findPrimeFactors(factor);
+            for (BigInteger prime : primes) {
+                result = result.max(prime);
+            }
+        }
+        return result;
     }
 }

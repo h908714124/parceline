@@ -92,4 +92,8 @@ public class Product {
         }
         return result;
     }
+
+    BigInteger[] factors() {
+        return factors;
+    }
 }
